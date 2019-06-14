@@ -1,0 +1,37 @@
+= Rhythm - A Model for Parallel Programs and Architectures
+
+This repository contains an application for estimating performance of parallel programs on parallel architectures.
+In addition, Python scripts and https://software.intel.com/en-us/articles/pin-a-binary-instrumentation-tool-downloads[Pin] tools are included for generating the inputs to the application.
+These scripts are designed to be used with the PARSEC benchmarks (including SPLASH-2x), but can be adapted for other benchmark suites.
+
+== Compiling Rhythm
+
+CMake can configure the project for different build systems and IDEs (type `cmake --help` for a list of generators available for your platform).
+We recommend you create a build directory before invoking CMake to configure the project (`cmake -B`).
+For example, we can perform the configuration step from the project root directory:
+
+  cmake -H. -Bcmake-build-release -DCMAKE_BUILD_TYPE=Release
+  cmake -H. -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug
+
+After the configuration step, you can ask CMake to build the project.
+
+  cmake --build cmake-build-release/ --target all
+  cmake --build cmake-build-debug/ --target all
+
+Once compiled, you will find the `rhythm` executable in the `bin` directory.
+Use the `--help` argument for information on the command line interface.
+See `scripts/estimate-parsec.py` for help.
+
+== Generating Traces
+
+A https://software.intel.com/en-us/articles/pin-a-binary-instrumentation-tool-downloads[Pin] tool for generating synchronization traces can be found in the `pin-tools` directory.
+The Pin tool has been tested using Pin versions 2 and 3.
+To compile the tool, make sure you have defined the `PIN_ROOT` environment variable to point to the root directory of your Pin installation.
+To use the tool, run Pin with the compiled library (e.g., `pthread-trace.so`) and a multithreaded application that uses the pthread library.
+See `scripts/instrument-parsec.py` for help.
+
+== Generating Configurations
+
+Configurations can be generated based on profiling data from Intel's Vtune Amplifier.
+See `scripts/profile-parsec.py` for help generating data with Vtune.
+For Vtune 2019, the relevant profile data is collected with the `uarch-exploration` analysis type.
